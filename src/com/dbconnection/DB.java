@@ -20,7 +20,7 @@ public class DB
     public DB()
     {
         try{
-            Class.forName("org.apache.derby.EmbeddedDriver");
+            Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
         }catch(Exception e)
         {
             e.printStackTrace();
@@ -31,7 +31,7 @@ public class DB
     public Connection getConnection()
     {
         try{
-           c=DriverManager.getConnection("jdbc:mysq://localhost:1527/bmsdb","root","root");
+           c=DriverManager.getConnection("jdbc:derby://localhost:1527/bmsdb","root","root");
            return c;
         }catch(Exception e)
         {

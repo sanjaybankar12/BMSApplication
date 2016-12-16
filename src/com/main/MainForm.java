@@ -6,10 +6,29 @@
 
 package com.main;
 
+import com.bean.Employee;
+import com.dao.EmployeeDao;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.event.InputEvent;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -20,8 +39,75 @@ public class MainForm extends javax.swing.JFrame {
     /**
      * Creates new form MainForm
      */
+    static String sector="";
+    static int receipt_no=0;
+    static int user_type=0;
     public MainForm() {
         initComponents();
+    }
+    public MainForm(String sector,int user_type) {
+        initComponents();
+        this.sector=sector;
+        this.user_type=user_type;
+        jtb.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        ListSelectionModel lsm=(ListSelectionModel)jtb.getSelectionModel();
+        lsm.addListSelectionListener(new ListSelectionListener()
+        {
+            @Override
+            public void valueChanged(ListSelectionEvent e) 
+            {
+                try{
+                int idx=lsm.getMaxSelectionIndex();
+                if(idx!=-1)
+                {
+                    DefaultTableModel dtm=(DefaultTableModel)jtb.getModel();
+                    receipt_no=Integer.parseInt(dtm.getValueAt(idx,2)+"");
+                    
+                }
+                }
+                catch(Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            }
+            
+        });
+       
+        initData(sector);
+    }
+    public void initData(String sector)
+    {
+        try{
+            
+            if(user_type!=1)
+            {
+                receipt_menu.setEnabled(false);
+                print_menu.setEnabled(false);
+            }
+            
+            ArrayList<Employee> arl=EmployeeDao.getEmployeeDetails(sector);
+            if(arl!=null)
+            {
+                DefaultTableModel dtm=(DefaultTableModel)jtb.getModel();                
+                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );   
+                jtb.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+                jtb.getColumnModel().getColumn(3).setCellRenderer( centerRenderer );
+                jtb.getColumnModel().getColumn(15).setCellRenderer( centerRenderer );
+
+                while(dtm.getRowCount()>0)
+                {
+                    dtm.removeRow(0);
+                }
+                for(int i=0;i<arl.size();i++){
+                    Employee emp=arl.get(i);
+                    dtm.addRow(new Object[]{(i+1),emp.getName(),emp.getReceipt_no(),emp.getEntry_date(),emp.getSub_rate(),emp.getJan(),emp.getFeb(),emp.getMar(),emp.getApr(),emp.getMay(),emp.getJun(),emp.getJul(),emp.getAug(),emp.getSep(),emp.getOct(),emp.getNov(),emp.getDecb()});
+                }
+            }
+            receipt_no=0;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -35,13 +121,29 @@ public class MainForm extends javax.swing.JFrame {
 
         mainpanel = new javax.swing.JPanel();
         jScrollPane = new javax.swing.JScrollPane();
-        jtb = new javax.swing.JTable();
+        jtb = new javax.swing.JTable()
+        {
+            public Component prepareRenderer(TableCellRenderer render,int row,int col)
+            {
+                Component c=super.prepareRenderer(render,row,col);
+
+                JComponent jc=(JComponent)c;
+                jc.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
+                return c;
+            }
+
+        }
+        ;
         jmenubar = new javax.swing.JMenuBar();
         add_menu = new javax.swing.JMenu();
         edit_menu = new javax.swing.JMenu();
         delete_menu = new javax.swing.JMenu();
         receipt_menu = new javax.swing.JMenu();
-        jMenu1 = new javax.swing.JMenu();
+        print_menu = new javax.swing.JMenu();
+        search_menu = new javax.swing.JMenu();
+        src_by_rcpno = new javax.swing.JMenuItem();
+        src_by_emp = new javax.swing.JMenuItem();
+        show_all_menu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -50,8 +152,15 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
-        jScrollPane.setSize(mainpanel.getSize());
+        mainpanel.setBackground(new java.awt.Color(255, 153, 153));
 
+        jScrollPane.setSize(mainpanel.getSize());
+        jScrollPane.setBackground(new java.awt.Color(255, 153, 153));
+
+        jtb.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        jtb.setDefaultRenderer(Integer.class, centerRenderer);
         jtb.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -91,14 +200,17 @@ public class MainForm extends javax.swing.JFrame {
         mainpanelLayout.setVerticalGroup(
             mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainpanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
+                .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 644, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        jmenubar.setBackground(new java.awt.Color(153, 153, 255));
+        jmenubar.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
         jmenubar.setPreferredSize(new java.awt.Dimension(193, 30));
 
         add_menu.setText("Add");
-        add_menu.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        add_menu.setBorderPainted(true);
+        add_menu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         add_menu.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 add_menuMouseClicked(evt);
@@ -107,20 +219,76 @@ public class MainForm extends javax.swing.JFrame {
         jmenubar.add(add_menu);
 
         edit_menu.setText("Edit");
-        edit_menu.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        edit_menu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        edit_menu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                edit_menuMouseClicked(evt);
+            }
+        });
         jmenubar.add(edit_menu);
 
+        delete_menu.addSeparator();
         delete_menu.setText("Delete");
-        delete_menu.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        delete_menu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        delete_menu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                delete_menuMouseClicked(evt);
+            }
+        });
         jmenubar.add(delete_menu);
 
         receipt_menu.setText("Receipt");
-        receipt_menu.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        receipt_menu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        receipt_menu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                receipt_menuMouseClicked(evt);
+            }
+        });
         jmenubar.add(receipt_menu);
 
-        jMenu1.setText("Print");
-        jMenu1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jmenubar.add(jMenu1);
+        print_menu.setText("Print");
+        print_menu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        print_menu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                print_menuMouseClicked(evt);
+            }
+        });
+        jmenubar.add(print_menu);
+
+        serach_text=new JTextField();
+        search_menu.setText("Search");
+        search_menu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+
+        src_by_rcpno.setText("Search By Receipt Number");
+        src_by_rcpno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                src_by_rcpnoActionPerformed(evt);
+            }
+        });
+        search_menu.add(src_by_rcpno);
+
+        src_by_emp.setText("Search By Employee Name");
+        src_by_emp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                src_by_empActionPerformed(evt);
+            }
+        });
+        search_menu.add(src_by_emp);
+
+        jmenubar.add(serach_text);
+
+        jmenubar.add(search_menu);
+
+        JLabel tptext=new JLabel("                                                                                                                                                                                                                                    ");
+        show_all_menu.setText("Show All");
+        show_all_menu.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        show_all_menu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                show_all_menuMouseClicked(evt);
+            }
+        });
+        jmenubar.add(show_all_menu);
+        jmenubar.add(tptext);
 
         setJMenuBar(jmenubar);
 
@@ -142,17 +310,195 @@ public class MainForm extends javax.swing.JFrame {
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         // TODO add your handling code here:
+        Dimension d=this.getSize();
         mainpanel.setSize(this.getSize());
-        jScrollPane.setSize(this.getSize());
-        jtb.setSize(this.getSize());
+        jScrollPane.setSize(d.width-18,d.height);
+        jtb.setSize(d.width-18,d.height);
     }//GEN-LAST:event_formComponentResized
 
     private void add_menuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_add_menuMouseClicked
         // TODO add your handling code here:
-        AddUser ad=new AddUser(this,true);
-        ad.setLocationRelativeTo(this);
-        ad.setVisible(true);
+        
+        try
+        {
+            if(!sector.equals(""))
+            {                
+                AddUser ad=new AddUser(this,true,sector);
+                ad.setLocationRelativeTo(this);
+                ad.setResizable(false);
+                ad.setVisible(true);
+                ad.setAutoRequestFocus(true);
+                       
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null,"Sector of Employee not identify...!!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+           
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_add_menuMouseClicked
+
+    private void edit_menuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edit_menuMouseClicked
+        // TODO add your handling code here:
+        try
+        {
+            if(!sector.equals("") && receipt_no!=0)
+            {
+                EditUser ed=new EditUser(this,true,sector,receipt_no);
+                ed.setLocationRelativeTo(this);
+                ed.setResizable(false);
+                ed.setVisible(true);
+                ed.setAutoRequestFocus(true);
+                              
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null,"Select Employee to Edit...!!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+           
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_edit_menuMouseClicked
+
+    private void delete_menuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_delete_menuMouseClicked
+        // TODO add your handling code here:
+        try
+        {
+            if(!sector.equals("") && receipt_no!=0)
+            {
+                DeleteUser ed=new DeleteUser(this,true,sector,receipt_no);
+                ed.setLocationRelativeTo(this);
+                ed.setResizable(false);
+                ed.setVisible(true);
+                ed.setAutoRequestFocus(true);
+                        
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null,"Select Employee to Delete Record...!!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+           
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_delete_menuMouseClicked
+
+    private void receipt_menuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_receipt_menuMouseClicked
+        // TODO add your handling code here:
+        if(user_type==1)
+        {
+            int choice=JOptionPane.showConfirmDialog(null,"Do want to see Receipt?","Confirm",JOptionPane.YES_NO_OPTION);
+            if(choice==0)
+            {
+                EmployeeDao.showReceipt(sector);
+            }
+        }
+    }//GEN-LAST:event_receipt_menuMouseClicked
+
+    private void print_menuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_print_menuMouseClicked
+        // TODO add your handling code here:
+        try
+        {
+            if(user_type==1)
+            {
+                if(!sector.equals(""))
+                {
+                    PrintDialog ad=new PrintDialog(this,true,sector);
+                    ad.setLocationRelativeTo(this);
+                    ad.setResizable(false);
+                    ad.setVisible(true);
+                    ad.setAutoRequestFocus(true);
+
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null,"Sector of Employee not identify...!!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+                }
+            }
+           
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_print_menuMouseClicked
+
+    private void src_by_rcpnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_src_by_rcpnoActionPerformed
+        // TODO add your handling code here:
+        try
+        {
+            String search_data=serach_text.getText();
+            Pattern p=Pattern.compile("[0-9]+");
+            if(search_data.isEmpty())
+            {
+                JOptionPane.showMessageDialog(null,"Receipt Number must not be Empty...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            else if(!p.matcher(search_data).matches())
+            {
+                JOptionPane.showMessageDialog(null,"Receipt Number must be Value...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            else
+            {
+                int rec_no=Integer.parseInt(search_data);
+                Employee emp=EmployeeDao.getEmployeeDetails(sector, rec_no);
+                
+                DefaultTableModel dtm=(DefaultTableModel)jtb.getModel();
+                while(dtm.getRowCount()>0)
+                {
+                    dtm.removeRow(0);
+                }
+                if(emp.getReceipt_no()!=0)
+                {
+                    dtm.addRow(new Object[]{(1),emp.getName(),emp.getReceipt_no(),emp.getEntry_date(),emp.getSub_rate(),emp.getJan(),emp.getFeb(),emp.getMar(),emp.getApr(),emp.getMay(),emp.getJun(),emp.getJul(),emp.getAug(),emp.getSep(),emp.getOct(),emp.getNov(),emp.getDecb()});
+                }
+                
+            }
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_src_by_rcpnoActionPerformed
+
+    private void src_by_empActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_src_by_empActionPerformed
+        // TODO add your handling code here:
+        try
+        {
+            String search_data=serach_text.getText();
+            if(search_data.isEmpty())
+            {
+                JOptionPane.showMessageDialog(null,"Employee Name must not be Empty...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            else
+            {
+                ArrayList<Employee> arl=EmployeeDao.getEmployeeDetails(sector,search_data.toUpperCase());
+                
+                DefaultTableModel dtm=(DefaultTableModel)jtb.getModel();
+                while(dtm.getRowCount()>0)
+                {
+                    dtm.removeRow(0);
+                }
+                
+                for(int i=0;i<arl.size();i++)
+                {
+                    dtm.addRow(new Object[]{(i+1),arl.get(i).getName(),arl.get(i).getReceipt_no(),arl.get(i).getEntry_date(),arl.get(i).getSub_rate(),arl.get(i).getJan(),arl.get(i).getFeb(),arl.get(i).getMar(),arl.get(i).getApr(),arl.get(i).getMay(),arl.get(i).getJun(),arl.get(i).getJul(),arl.get(i).getAug(),arl.get(i).getSep(),arl.get(i).getOct(),arl.get(i).getNov(),arl.get(i).getDecb()});
+                }
+                
+            }
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_src_by_empActionPerformed
+
+    private void show_all_menuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_show_all_menuMouseClicked
+        // TODO add your handling code here:
+        initData(sector);
+    }//GEN-LAST:event_show_all_menuMouseClicked
 
     /**
      * @param args the command line arguments
@@ -182,7 +528,7 @@ public class MainForm extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+       /* java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                MainForm mf= new MainForm();
                mf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -191,18 +537,23 @@ public class MainForm extends javax.swing.JFrame {
                mf.setMaximumSize(d);
                mf.setVisible(true);
             }
-        });
+        });*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu add_menu;
     private javax.swing.JMenu delete_menu;
     private javax.swing.JMenu edit_menu;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane;
     private javax.swing.JMenuBar jmenubar;
     private javax.swing.JTable jtb;
     private javax.swing.JPanel mainpanel;
+    private javax.swing.JMenu print_menu;
     private javax.swing.JMenu receipt_menu;
+    private javax.swing.JMenu search_menu;
+    private javax.swing.JMenu show_all_menu;
+    private javax.swing.JTextField serach_text;
+    private javax.swing.JMenuItem src_by_emp;
+    private javax.swing.JMenuItem src_by_rcpno;
     // End of variables declaration//GEN-END:variables
 }
