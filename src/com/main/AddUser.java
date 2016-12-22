@@ -135,9 +135,18 @@ public class AddUser extends javax.swing.JDialog {
         jLabel3.setText("jLabel3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
+
+        jPanel1.setBackground(new java.awt.Color(153, 153, 255));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Receipt No :");
+
+        receipt_jt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                receipt_jtKeyReleased(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("Employee Name :");
@@ -235,6 +244,7 @@ public class AddUser extends javax.swing.JDialog {
         jLabel22.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel22.setText("Remark : ");
 
+        add_rec_but.setBackground(new java.awt.Color(255, 153, 153));
         add_rec_but.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         add_rec_but.setText("Add Record");
         add_rec_but.addActionListener(new java.awt.event.ActionListener() {
@@ -243,6 +253,7 @@ public class AddUser extends javax.swing.JDialog {
             }
         });
 
+        rst_but.setBackground(new java.awt.Color(255, 153, 153));
         rst_but.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         rst_but.setText("Reset");
         rst_but.addActionListener(new java.awt.event.ActionListener() {
@@ -489,6 +500,10 @@ public class AddUser extends javax.swing.JDialog {
             String tot=tott.getText();
             String remark=remt.getText();
             
+            Pattern pnm=Pattern.compile("[a-zA-Z ]+");
+            
+            Pattern placeptr=Pattern.compile("[a-zA-Z, ]+");
+            
             if(receptno_str.isEmpty())
             {
                 JOptionPane.showMessageDialog(null,"Receipt No. must not be Empty..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
@@ -497,7 +512,7 @@ public class AddUser extends javax.swing.JDialog {
             {
                 JOptionPane.showMessageDialog(null,"Receipt No. must be Value..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
             }
-            else if(Integer.parseInt(receptno_str)==0)
+            else if(Long.parseLong(receptno_str)==0)
             {
                 JOptionPane.showMessageDialog(null,"Receipt No. must be greater than 0..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
             }
@@ -505,9 +520,25 @@ public class AddUser extends javax.swing.JDialog {
             {
                 JOptionPane.showMessageDialog(null,"Employee Name must not be Empty..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
             }
+            else if(!pnm.matcher(emp_name).matches())
+            {
+                JOptionPane.showMessageDialog(null,"Employee Name not contains any NUMBER..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            else if(emp_name.length()>40)
+            {
+                JOptionPane.showMessageDialog(null,"Employee Name must not be greater than 40 Characters..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
             else if(place.isEmpty())
             {
                 JOptionPane.showMessageDialog(null,"Place must not be Empty..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            else if(!placeptr.matcher(place).matches())
+            {
+                JOptionPane.showMessageDialog(null,"Place must not contains any Special Characters & Number...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            else if(place.length()>45)
+            {
+                JOptionPane.showMessageDialog(null,"Place must not be greater than 45 Characters..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
             }
             else if(startYr.equals(endYr))
             {
@@ -584,7 +615,7 @@ public class AddUser extends javax.swing.JDialog {
             else
             {
                 
-                int rec_no=Integer.parseInt(receptno_str);
+                long rec_no=Long.parseLong(receptno_str);
                 
                 if(!EmployeeDao.checkReceiptNo(rec_no,sector))
                 {
@@ -602,7 +633,7 @@ public class AddUser extends javax.swing.JDialog {
                     int novval=Integer.parseInt(nov);
                     int decval=Integer.parseInt(dec);
 
-                    int total=Integer.parseInt(tot);
+                    long total=Long.parseLong(tot);
 
                     Employee emp=new Employee();
 
@@ -656,6 +687,24 @@ public class AddUser extends javax.swing.JDialog {
         }
         
     }//GEN-LAST:event_add_rec_butActionPerformed
+
+    private void receipt_jtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_receipt_jtKeyReleased
+        // TODO add your handling code here:
+        try{
+            String rectx=receipt_jt.getText().trim();
+            receipt_jt.setText(rectx);
+            int rectx_len=rectx.length();
+            if(rectx_len>16)
+            {
+                receipt_jt.setText(rectx.substring(0,16));
+                JOptionPane.showMessageDialog(null,"Receipt No. not greater than 16 digits..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+           
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_receipt_jtKeyReleased
 
     /**
      * @param args the command line arguments

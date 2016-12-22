@@ -13,9 +13,9 @@ import java.util.Date;
  * @author Sanjay
  */
 public class Employee {
-    private int id;
+    private long id;
     private String name;
-    private int receipt_no;
+    private long receipt_no;
     private Date entry_date;
     private int sub_rate;
     private int jan;
@@ -30,7 +30,7 @@ public class Employee {
     private int oct;
     private int nov;
     private int decb;
-    private int total;
+    private long total;
     private String remark;
     private String sector;
     private String sub_from;
@@ -69,11 +69,11 @@ public class Employee {
         this.sector = sector;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -85,11 +85,11 @@ public class Employee {
         this.name = name;
     }
 
-    public int getReceipt_no() {
+    public long getReceipt_no() {
         return receipt_no;
     }
 
-    public void setReceipt_no(int receipt_no) {
+    public void setReceipt_no(long receipt_no) {
         this.receipt_no = receipt_no;
     }
 
@@ -205,11 +205,11 @@ public class Employee {
         this.decb = decb;
     }
 
-    public int getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(long total) {
         this.total = total;
     }
 

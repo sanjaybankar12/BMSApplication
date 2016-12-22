@@ -27,8 +27,8 @@ public class DeleteUser extends javax.swing.JDialog {
     
     java.awt.Frame parent;
     String sector;
-    int receipt_no;
-    public DeleteUser(java.awt.Frame parent, boolean modal,String sector,int receipt_no) {
+    long receipt_no;
+    public DeleteUser(java.awt.Frame parent, boolean modal,String sector,long receipt_no) {
         super(parent,"Remove Employee", modal);
         this.parent=parent;
         this.sector=sector;
@@ -140,6 +140,9 @@ public class DeleteUser extends javax.swing.JDialog {
         jLabel3.setText("jLabel3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
+
+        jPanel1.setBackground(new java.awt.Color(153, 153, 255));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Receipt No :");
@@ -274,6 +277,7 @@ public class DeleteUser extends javax.swing.JDialog {
         jLabel22.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel22.setText("Remark : ");
 
+        del_rec_but.setBackground(new java.awt.Color(255, 153, 153));
         del_rec_but.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         del_rec_but.setText("Delete Record");
         del_rec_but.addActionListener(new java.awt.event.ActionListener() {
@@ -496,7 +500,7 @@ public class DeleteUser extends javax.swing.JDialog {
             else
             {
                 
-                int rec_no=Integer.parseInt(receptno_str);
+                long rec_no=Long.parseLong(receptno_str);
                 
                 if(EmployeeDao.checkReceiptNo(rec_no,sector))
                 {

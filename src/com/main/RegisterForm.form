@@ -257,7 +257,7 @@
             </Component>
             <Component class="javax.swing.JPasswordField" name="passjt">
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="passjtActionPerformed"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="passjtKeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="reg_but">

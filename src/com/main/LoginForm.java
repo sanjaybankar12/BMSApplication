@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -296,7 +297,7 @@ public class LoginForm extends javax.swing.JFrame {
                    {
                         
                         MainForm mf= new MainForm(sectorjcb.getSelectedItem().toString(),user_type);
-                        mf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                        mf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                         Image image=new ImageIcon(getClass().getResource("/com/images/bmslogo.jpg")).getImage();
                         mf.setIconImage(image);
                         Dimension d=Toolkit.getDefaultToolkit().getScreenSize().getSize();
@@ -378,6 +379,13 @@ public class LoginForm extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try{
+                    
+                    String temp_dir_path=System.getenv("USERPROFILE")+"\\AppData\\Local\\BMS\\Temp";
+                    File temp_dir_file=new File(temp_dir_path);
+                    temp_dir_file.mkdirs();
+                    
+                    System.setProperty("java.io.tmpdir",temp_dir_file.getPath());
+                    
                     LoginForm lf=new LoginForm();
                     lf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     Image image=new ImageIcon(getClass().getResource("/com/images/bmslogo.jpg")).getImage();
@@ -390,7 +398,7 @@ public class LoginForm extends javax.swing.JFrame {
                 }
                 catch(Exception e)
                 {
-                    JOptionPane.showMessageDialog(null,"Unable start application...!!","Error Message",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"Unable start application..."+e.getMessage()+"...!!","Error Message",JOptionPane.ERROR_MESSAGE);
                     e.printStackTrace();
                 }
             }

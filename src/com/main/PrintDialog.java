@@ -46,6 +46,9 @@ public class PrintDialog extends javax.swing.JDialog {
         print_but = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
+
+        jPanel1.setBackground(new java.awt.Color(153, 153, 255));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Select Receipt Number Range");
@@ -56,6 +59,7 @@ public class PrintDialog extends javax.swing.JDialog {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("To : ");
 
+        print_but.setBackground(new java.awt.Color(255, 153, 153));
         print_but.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         print_but.setText("Print");
         print_but.addActionListener(new java.awt.event.ActionListener() {

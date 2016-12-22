@@ -106,9 +106,9 @@ public class RegisterForm extends javax.swing.JFrame {
             }
         });
 
-        passjt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passjtActionPerformed(evt);
+        passjt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                passjtKeyPressed(evt);
             }
         });
 
@@ -272,10 +272,6 @@ public class RegisterForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_userjtActionPerformed
 
-    private void passjtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passjtActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_passjtActionPerformed
-
     private void rst_butActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rst_butActionPerformed
         // TODO add your handling code here:
         
@@ -319,12 +315,17 @@ public class RegisterForm extends javax.swing.JFrame {
             String username=userjt.getText();
             String password=new String(passjt.getPassword());
             
+            Pattern nmp=Pattern.compile("[a-zA-z ]+");
             Pattern p=Pattern.compile("[0-9]{10}");
             Matcher m=p.matcher(phone);
             
             if(name.isEmpty())
             {
                 JOptionPane.showMessageDialog(null,"Name must not be Empty...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            else if(!nmp.matcher(name).matches())
+            {
+                JOptionPane.showMessageDialog(null,"Name not contains any number, Enter your NAME...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
             }
             else if(phone.isEmpty())
             {
@@ -399,6 +400,24 @@ public class RegisterForm extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_reg_butActionPerformed
+
+    private void passjtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passjtKeyPressed
+        // TODO add your handling code here:
+        try
+        {
+            int kc=evt.getKeyCode();
+            if(kc==32)
+            {
+                JOptionPane.showMessageDialog(null,"Spaces not allow in Password Field...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            String pass=new String(passjt.getPassword()).trim();
+            passjt.setText(pass);
+            
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_passjtKeyPressed
 
     /**
      * @param args the command line arguments

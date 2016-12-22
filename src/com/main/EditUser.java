@@ -27,8 +27,8 @@ public class EditUser extends javax.swing.JDialog {
     
     java.awt.Frame parent;
     String sector;
-    int receipt_no;
-    public EditUser(java.awt.Frame parent, boolean modal,String sector,int receipt_no) {
+    long receipt_no;
+    public EditUser(java.awt.Frame parent, boolean modal,String sector,long receipt_no) {
         super(parent,"Edit Employee", modal);
         this.parent=parent;
         this.sector=sector;
@@ -141,6 +141,9 @@ public class EditUser extends javax.swing.JDialog {
         jLabel3.setText("jLabel3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
+
+        jPanel1.setBackground(new java.awt.Color(153, 153, 255));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Receipt No :");
@@ -243,6 +246,7 @@ public class EditUser extends javax.swing.JDialog {
         jLabel22.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel22.setText("Remark : ");
 
+        up_rec_but.setBackground(new java.awt.Color(255, 153, 153));
         up_rec_but.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         up_rec_but.setText("Update Record");
         up_rec_but.addActionListener(new java.awt.event.ActionListener() {
@@ -251,6 +255,7 @@ public class EditUser extends javax.swing.JDialog {
             }
         });
 
+        rst_but.setBackground(new java.awt.Color(255, 153, 153));
         rst_but.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         rst_but.setText("Reset");
         rst_but.addActionListener(new java.awt.event.ActionListener() {
@@ -497,6 +502,9 @@ public class EditUser extends javax.swing.JDialog {
             String tot=tott.getText();
             String remark=remt.getText();
             
+            Pattern pnm=Pattern.compile("[a-zA-Z ]+");
+            Pattern placeptr=Pattern.compile("[a-zA-Z, ]+");
+            
             if(receptno_str.isEmpty())
             {
                 JOptionPane.showMessageDialog(null,"Receipt No. must not be Empty..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
@@ -509,9 +517,25 @@ public class EditUser extends javax.swing.JDialog {
             {
                 JOptionPane.showMessageDialog(null,"Employee Name must not be Empty..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
             }
+            else if(!pnm.matcher(emp_name).matches())
+            {
+                JOptionPane.showMessageDialog(null,"Employee Name not contains any NUMBER..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            else if(emp_name.length()>40)
+            {
+                JOptionPane.showMessageDialog(null,"Employee Name must not be greater than 40 Characters..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
             else if(place.isEmpty())
             {
                 JOptionPane.showMessageDialog(null,"Place must not be Empty..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            else if(!placeptr.matcher(place).matches())
+            {
+                JOptionPane.showMessageDialog(null,"Place must not contains any Special Characters & Number...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
+            }
+            else if(place.length()>45)
+            {
+                JOptionPane.showMessageDialog(null,"Place must not be greater than 45 Characters..!!","Warning Message",JOptionPane.WARNING_MESSAGE);
             }
             else if(startYr.equals(endYr))
             {
@@ -588,7 +612,7 @@ public class EditUser extends javax.swing.JDialog {
             else
             {
                 
-                int rec_no=Integer.parseInt(receptno_str);
+                long rec_no=Long.parseLong(receptno_str);
                 
                 if(EmployeeDao.checkReceiptNo(rec_no,sector))
                 {
@@ -606,7 +630,7 @@ public class EditUser extends javax.swing.JDialog {
                     int novval=Integer.parseInt(nov);
                     int decval=Integer.parseInt(dec);
 
-                    int total=Integer.parseInt(tot);
+                    long total=Long.parseLong(tot);
 
                     Employee emp=new Employee();
 

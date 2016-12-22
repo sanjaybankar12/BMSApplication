@@ -31,7 +31,7 @@ public class DB
     public Connection getConnection()
     {
         try{
-           c=DriverManager.getConnection("jdbc:derby://localhost:1527/bmsdb","root","root");
+           c=DriverManager.getConnection("jdbc:derby:bmsdb","root","root");
            return c;
         }catch(Exception e)
         {

@@ -11,6 +11,7 @@ import com.dbconnection.DB;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Robot;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -35,6 +36,8 @@ import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.constant.PageType;
 import net.sf.dynamicreports.report.constant.VerticalAlignment;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -42,7 +45,7 @@ import net.sf.dynamicreports.report.constant.VerticalAlignment;
  */
 public class EmployeeDao {
     
-    public static boolean checkReceiptNo(int rec_no,String sector)
+    public static boolean checkReceiptNo(long rec_no,String sector)
     {
         try{
             DB db=new DB();
@@ -71,7 +74,7 @@ public class EmployeeDao {
             
             PreparedStatement ps=c.prepareStatement("INSERT INTO EMPLOYEE_INFO(NAME,RECEIPT_NO,ENTRY_DATE,SUB_RATE,JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DECB,TOTAL,REMARK,SECTOR,SUB_FROM,SUB_TO,PLACE)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1,emp.getName().toUpperCase());
-            ps.setInt(2,emp.getReceipt_no());
+            ps.setLong(2,emp.getReceipt_no());
             ps.setDate(3,sd1);
             ps.setInt(4,emp.getSub_rate());
             ps.setInt(5,emp.getJan());
@@ -86,7 +89,7 @@ public class EmployeeDao {
             ps.setInt(14,emp.getOct());
             ps.setInt(15,emp.getNov());
             ps.setInt(16,emp.getDecb());
-            ps.setInt(17,emp.getTotal());
+            ps.setLong(17,emp.getTotal());
             ps.setString(18,emp.getRemark());
             ps.setString(19,emp.getSector());
             ps.setString(20,emp.getSub_from());
@@ -129,12 +132,12 @@ public class EmployeeDao {
             ps.setInt(13,emp.getOct());
             ps.setInt(14,emp.getNov());
             ps.setInt(15,emp.getDecb());
-            ps.setInt(16,emp.getTotal());
+            ps.setLong(16,emp.getTotal());
             ps.setString(17,emp.getRemark());
             ps.setString(18,emp.getSub_from());
             ps.setString(19,emp.getSub_to());
             ps.setString(20,emp.getPlace().toUpperCase());
-            ps.setInt(21,emp.getReceipt_no());
+            ps.setLong(21,emp.getReceipt_no());
             ps.setString(22,emp.getSector());
             
             ps.executeUpdate();
@@ -163,9 +166,9 @@ public class EmployeeDao {
             {
                 Employee emp=new Employee();
                 
-                emp.setId(rs.getInt("ID"));
+                emp.setId(rs.getLong("ID"));
                 emp.setName(rs.getString("NAME"));
-                emp.setReceipt_no(rs.getInt("RECEIPT_NO"));
+                emp.setReceipt_no(rs.getLong("RECEIPT_NO"));
                 emp.setEntry_date(rs.getDate("ENTRY_DATE"));
                 emp.setSub_rate(rs.getInt("SUB_RATE"));
                 emp.setJan(rs.getInt("JAN"));
@@ -180,7 +183,7 @@ public class EmployeeDao {
                 emp.setOct(rs.getInt("OCT"));
                 emp.setNov(rs.getInt("NOV"));
                 emp.setDecb(rs.getInt("DECB"));
-                emp.setTotal(rs.getInt("TOTAL"));
+                emp.setTotal(rs.getLong("TOTAL"));
                 emp.setRemark(rs.getString("REMARK"));
                 emp.setSector(rs.getString("SECTOR"));
                 emp.setSub_from(rs.getString("SUB_FROM"));
@@ -199,7 +202,7 @@ public class EmployeeDao {
         }
     }
     
-    public static Employee getEmployeeDetails(String sector,int receipt_no)
+    public static Employee getEmployeeDetails(String sector,long receipt_no)
     {
         try
         {
@@ -212,9 +215,9 @@ public class EmployeeDao {
             Employee emp=new Employee();
             while(rs.next())
             {
-                emp.setId(rs.getInt("ID"));
+                emp.setId(rs.getLong("ID"));
                 emp.setName(rs.getString("NAME"));
-                emp.setReceipt_no(rs.getInt("RECEIPT_NO"));
+                emp.setReceipt_no(rs.getLong("RECEIPT_NO"));
                 emp.setEntry_date(rs.getDate("ENTRY_DATE"));
                 emp.setSub_rate(rs.getInt("SUB_RATE"));
                 emp.setJan(rs.getInt("JAN"));
@@ -229,7 +232,7 @@ public class EmployeeDao {
                 emp.setOct(rs.getInt("OCT"));
                 emp.setNov(rs.getInt("NOV"));
                 emp.setDecb(rs.getInt("DECB"));
-                emp.setTotal(rs.getInt("TOTAL"));
+                emp.setTotal(rs.getLong("TOTAL"));
                 emp.setRemark(rs.getString("REMARK"));
                 emp.setSector(rs.getString("SECTOR"));
                 emp.setSub_from(rs.getString("SUB_FROM"));
@@ -261,9 +264,9 @@ public class EmployeeDao {
             {
                 Employee emp=new Employee();
                 
-                emp.setId(rs.getInt("ID"));
+                emp.setId(rs.getLong("ID"));
                 emp.setName(rs.getString("NAME"));
-                emp.setReceipt_no(rs.getInt("RECEIPT_NO"));
+                emp.setReceipt_no(rs.getLong("RECEIPT_NO"));
                 emp.setEntry_date(rs.getDate("ENTRY_DATE"));
                 emp.setSub_rate(rs.getInt("SUB_RATE"));
                 emp.setJan(rs.getInt("JAN"));
@@ -278,7 +281,7 @@ public class EmployeeDao {
                 emp.setOct(rs.getInt("OCT"));
                 emp.setNov(rs.getInt("NOV"));
                 emp.setDecb(rs.getInt("DECB"));
-                emp.setTotal(rs.getInt("TOTAL"));
+                emp.setTotal(rs.getLong("TOTAL"));
                 emp.setRemark(rs.getString("REMARK"));
                 emp.setSector(rs.getString("SECTOR"));
                 emp.setSub_from(rs.getString("SUB_FROM"));
@@ -297,7 +300,7 @@ public class EmployeeDao {
         }
     }
     
-    public static boolean remove(int receipt_no,String sector)
+    public static boolean remove(long receipt_no,String sector)
     {
         try
         {
@@ -353,9 +356,9 @@ public class EmployeeDao {
                     .newRow()
                     .add(cmp.filler().setStyle(stl.style().setTopBorder(stl.pen2Point())).setFixedHeight(10)))                    
             .columns(
-                    Columns.column("Rec No.","RECEIPT_NO",DataTypes.integerType()),
-                    Columns.column("Name","NAME",DataTypes.stringType()).setFixedWidth(110),
-                    Columns.column("Date","ENTRY_DATE",DataTypes.dateType()).setFixedWidth(40),
+                    Columns.column("Rec No.","RECEIPT_NO",DataTypes.longType()),
+                    Columns.column("Name","NAME",DataTypes.stringType()).setFixedWidth(120),
+                    Columns.column("Date","ENTRY_DATE",DataTypes.dateType()).setFixedWidth(35),
                     Columns.column("Rate","SUB_RATE",DataTypes.integerType()),
                     Columns.column("Jan","JAN",DataTypes.integerType()),
                     Columns.column("Feb","FEB",DataTypes.integerType()),
@@ -369,15 +372,14 @@ public class EmployeeDao {
                     Columns.column("Oct","OCT",DataTypes.integerType()),
                     Columns.column("Nov","NOV",DataTypes.integerType()),
                     Columns.column("Dec","DECB",DataTypes.integerType()),
-                    Columns.column("Total","TOTAL",DataTypes.integerType()).setFixedWidth(40)
+                    Columns.column("Total","TOTAL",DataTypes.longType()).setFixedWidth(40)
             )
             .pageFooter(cmp.horizontalList().add(cmp.filler().setStyle(stl.style().setTopBorder(stl.pen2Point())).setFixedHeight(10)))       
             .pageFooter(Components.pageXofY().setStyle(boldCenterStyle))
             .highlightDetailEvenRows()
             .setDataSource("SELECT * FROM EMPLOYEE_INFO WHERE SECTOR='"+sector+"'", c);
               
-            try{
-                String userprofile=System.getenv("USERPROFILE")+"/Desktop/BMS Pdf Files";
+                String userprofile=System.getenv("USERPROFILE")+"/Desktop/BMS Pdf Files/BySector";
                 File file=new File(userprofile);
                 file.mkdirs();
                 String pdf_file_path=file.getPath()+"/"+sector+".pdf";
@@ -385,21 +387,25 @@ public class EmployeeDao {
                 jrb.toPdf(fout);
                 fout.flush();
                 fout.close();
-
-
-                Desktop.getDesktop().open(new File(pdf_file_path));
-            }
-            catch(Exception ee)
-            {
-                JOptionPane.showMessageDialog(null,sector+".pdf file already open, Close it and try again...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
-                ee.printStackTrace();
-            }
-            //jrb.show(false);
+                
+                //jrb.show(false);
+            JasperViewer jv=new JasperViewer(jrb.toJasperPrint(),false);
+            jv.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+            jv.setTitle(sector+" Report Details");
+            jv.setLocation(0,0);
+            jv.setVisible(true);
+                //Desktop.getDesktop().open(new File(pdf_file_path));
             
-        }catch(Exception e)
+        }        
+        catch(Exception e)
         {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null,"Report build failed, try again...","Error Message",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Report build failed..."+e.getMessage()+", try again...","Error Message",JOptionPane.ERROR_MESSAGE);
+        }
+        catch(Error er)
+        {
+            er.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Report build failed..."+er.getMessage()+", try again...","Error Message",JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -440,22 +446,22 @@ public class EmployeeDao {
                     .newRow()
                     .add(cmp.filler().setStyle(stl.style().setTopBorder(stl.pen2Point())).setFixedHeight(10)))                    
             .columns(
-                    Columns.column("Receipt No.","RECEIPT_NO",DataTypes.integerType()).setFixedWidth(50),
+                    Columns.column("Receipt No.","RECEIPT_NO",DataTypes.longType()).setFixedWidth(50),
                     Columns.column("Employee Name","NAME",DataTypes.stringType()),               
                     Columns.column("Sub. Rate","SUB_RATE",DataTypes.integerType()).setFixedWidth(40),
                     Columns.column("Entry Date","ENTRY_DATE",DataTypes.dateType()).setFixedWidth(50),
                     Columns.column("Sub. From","SUB_FROM",DataTypes.stringType()).setFixedWidth(50),
                     Columns.column("Sub. To","SUB_TO",DataTypes.stringType()).setFixedWidth(50),
                     Columns.column("Place","PLACE",DataTypes.stringType()).setFixedWidth(95),
-                    Columns.column("Total","TOTAL",DataTypes.integerType()).setFixedWidth(55)
+                    Columns.column("Total","TOTAL",DataTypes.longType()).setFixedWidth(55)
             )
             .pageFooter(cmp.horizontalList().add(cmp.filler().setStyle(stl.style().setTopBorder(stl.pen2Point())).setFixedHeight(10)))       
             .pageFooter(Components.pageXofY().setStyle(boldCenterStyle))
             .highlightDetailEvenRows()
             .setDataSource("SELECT * FROM EMPLOYEE_INFO WHERE (RECEIPT_NO BETWEEN "+from+" AND "+to+") AND SECTOR='"+sector+"'", c);
               
-            try{
-                String userprofile=System.getenv("USERPROFILE")+"/Desktop/BMS Pdf Files";
+            
+                String userprofile=System.getenv("USERPROFILE")+"/Desktop/BMS Pdf Files/ByPrintReceiptNo";
                 File file=new File(userprofile);
                 file.mkdirs();
                 String pdf_file_path=file.getPath()+"/"+sector+"_"+from+"_"+to+".pdf";
@@ -463,36 +469,33 @@ public class EmployeeDao {
                 jrb.toPdf(fout);
                 fout.flush();
                 fout.close();
-
-                try{
-                    Desktop.getDesktop().open(new File(pdf_file_path));
-
-                    Thread.sleep(1000);
-                    Robot r=new Robot();
-                    r.keyPress(17);
-                    r.keyPress(80);
-
-                    r.keyRelease(17);
-                    r.keyRelease(80);
-                }
-                catch(Exception ex)
-                {
-                    JOptionPane.showMessageDialog(null,"There is no any PDF Handler on your System...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
-                    ex.printStackTrace();
-                }
-                
-            }
-            catch(Exception ee)
-            {
-                JOptionPane.showMessageDialog(null,sector+"_"+from+"_"+to+".pdf file already open, Close it and try again...!!","Warning Message",JOptionPane.WARNING_MESSAGE);
-                ee.printStackTrace();
-            }
-            //jrb.show(false);
+            
+//                    Desktop.getDesktop().open(new File(pdf_file_path));
+//
+//                    Thread.sleep(600);
+//                    Robot r=new Robot();
+//                    r.keyPress(17);
+//                    r.keyPress(80);
+//
+//                    r.keyRelease(17);
+//                    r.keyRelease(80);
+                    
+                //jrb.show(false);
+                JasperViewer jv=new JasperViewer(jrb.toJasperPrint(),false);
+                jv.setLocation(0,0);
+                jv.setTitle(sector+"_"+from+"_"+to+" Report Details");
+                jv.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+                jv.setVisible(true);
             
         }catch(Exception e)
         {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null,"Report build failed, try again...","Error Message",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Report build failed..."+e.getMessage()+", try again...","Error Message",JOptionPane.ERROR_MESSAGE);
+        }
+        catch(Error er)
+        {
+            er.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Report build failed..."+er.getMessage()+", try again...","Error Message",JOptionPane.ERROR_MESSAGE);
         }
     }
 }

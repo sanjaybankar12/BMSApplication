@@ -3,12 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/kiran/Documents/NetBeansProjects/BMS/src/com/main/EditUser.java</file>
             <file>file:/C:/Users/kiran/Documents/NetBeansProjects/BMS/src/com/main/MainForm.java</file>
-            <file>file:/C:/Users/kiran/Documents/NetBeansProjects/BMS/src/com/main/DeleteUser.java</file>
-            <file>file:/C:/Users/kiran/Documents/NetBeansProjects/BMS/src/com/main/AddUser.java</file>
-            <file>file:/C:/Users/kiran/Documents/NetBeansProjects/BMS/src/com/dao/EmployeeDao.java</file>
-            <file>file:/C:/Users/kiran/Documents/NetBeansProjects/BMS/src/com/main/PrintDialog.java</file>
+            <file>file:/C:/Users/kiran/Documents/NetBeansProjects/BMS/src/com/dbconnection/DB.java</file>
         </group>
     </open-files>
 </project-private>
